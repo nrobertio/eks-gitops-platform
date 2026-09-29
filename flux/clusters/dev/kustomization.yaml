@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: demo-api-dev
+  namespace: flux-system
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: eks-gitops-platform
+  path: ./apps/demo-api/kustomize/overlays/dev
+  prune: true
+  wait: true
+  timeout: 3m

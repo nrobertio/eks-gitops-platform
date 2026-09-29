@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: restrict-image-registries
+  annotations:
+    policies.kyverno.io/title: Allowed image registries only
+    policies.kyverno.io/category: Supply Chain Security
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: validate-registries
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      validate:
+        message: "Images may only be pulled from approved registries (ghcr.io/nrobertio or *.dkr.ecr.*.amazonaws.com)."
+        pattern:
+          spec:
+            containers:
+              - image: "ghcr.io/nrobertio/* | *.dkr.ecr.*.amazonaws.com/*"

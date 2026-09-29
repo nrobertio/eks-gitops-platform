@@ -1,0 +1,46 @@
+# GitLab CI/CD: lint, validate, security scan, build.
+stages:
+  - validate
+  - security
+  - build
+
+variables:
+  TF_ROOT: terraform
+
+terraform:validate:
+  stage: validate
+  image:
+    name: hashicorp/terraform:1.9
+    entrypoint: [""]
+  script:
+    - terraform -chdir=${TF_ROOT} fmt -check -recursive
+    - terraform -chdir=${TF_ROOT} init -backend=false
+    - terraform -chdir=${TF_ROOT} validate
+
+helm:lint:
+  stage: validate
+  image: alpine/helm:3.15.4
+  script:
+    - helm lint apps/demo-api/helm
+
+tfsec:
+  stage: security
+  image: aquasec/tfsec:latest
+  script:
+    - tfsec ${TF_ROOT} --soft-fail
+
+trivy:config:
+  stage: security
+  image: aquasec/trivy:latest
+  script:
+    - trivy config --severity HIGH,CRITICAL .
+
+build:image:
+  stage: build
+  image: docker:27
+  services:
+    - docker:27-dind
+  script:
+    - docker build -t demo-api:${CI_COMMIT_SHORT_SHA} apps/demo-api
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"

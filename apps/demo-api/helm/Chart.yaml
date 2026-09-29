@@ -1,0 +1,6 @@
+apiVersion: v2
+name: demo-api
+description: A small FastAPI service delivered via GitOps
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
