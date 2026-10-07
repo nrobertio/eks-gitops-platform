@@ -1,6 +1,6 @@
 # Project Writeup: EKS GitOps Platform
 
-This document explains **why** the project exists, **how** it was built, **why each technology** was chosen, and the **benefits** it delivers. It doubles as the talking-track for discussing the project in interviews.
+This document explains **why** the project exists, **how** it was built, **why each technology** was chosen, and the **benefits** it delivers.
 
 ## 1. The problem it solves
 
@@ -56,9 +56,9 @@ These are the small, boring controls that prevent most real production incidents
 - **Fast, safe onboarding:** a new service is a pull request, not a runbook of manual steps.
 - **Cost control:** required limits and labels make spend predictable and attributable, and the whole stack tears down with one `terraform destroy`.
 
-## 6. Interview talking points
+## 6. Design notes and trade-offs
 
-Be ready to explain, in your own words:
+Key design decisions and their rationale:
 
 - Why GitOps beats `kubectl apply`: single source of truth, drift detection, self-heal, auditability.
 - Why app-of-apps: one root manages many components; scaling the platform is a pull request.
